@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
+import {TestService} from './service/test.service';
+import {TestMessage} from './test-message.model';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'github-analyzer-app';
+
+  testMessage: TestMessage;
+
+  constructor(private testService: TestService) {
+  }
+
+  test() {
+    this.testService.getTestMessage().subscribe(
+      message => {
+        this.testMessage = message;
+      }
+    );
+  }
 }
