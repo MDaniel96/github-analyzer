@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {TestService} from './service/test.service';
-import {TestMessage} from './test-message.model';
+import {TestMessage} from './model/test-message.model';
 
 @Component({
   selector: 'app-root',
