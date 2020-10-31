@@ -4,5 +4,6 @@ class SingleRepositoryResult(
 
         val repositoryName: String,
 
-        val contributionResponse: ContributionResponse
+        val contributionResponse: ContributionResponse,
+        val modificationResponse: ModificationResponse
 )

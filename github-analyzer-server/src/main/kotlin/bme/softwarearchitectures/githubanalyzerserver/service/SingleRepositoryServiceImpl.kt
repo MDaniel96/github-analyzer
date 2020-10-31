@@ -1,9 +1,6 @@
 package bme.softwarearchitectures.githubanalyzerserver.service
 
-import bme.softwarearchitectures.githubanalyzerserver.model.CommitsByDeveloper
-import bme.softwarearchitectures.githubanalyzerserver.model.ContributionResponse
-import bme.softwarearchitectures.githubanalyzerserver.model.SingleRepositoryRequest
-import bme.softwarearchitectures.githubanalyzerserver.model.SingleRepositoryResult
+import bme.softwarearchitectures.githubanalyzerserver.model.*
 import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
@@ -26,8 +23,10 @@ class SingleRepositoryServiceImpl : SingleRepositoryService {
             val commits = repository.listCommits().toArray()
 
             val contribution = generateContributionResponse(commits)
+            val modification = generateModificationResponse(commits)
 
-            val result = SingleRepositoryResult(repository.name, contribution)
+            val result = SingleRepositoryResult(repository.name, contribution, modification)
+            println(result)
         }
     }
 
@@ -39,11 +38,18 @@ class SingleRepositoryServiceImpl : SingleRepositoryService {
     private fun generateContributionResponse(commits: Array<GHCommit>): ContributionResponse {
         val commitsByDevelopers = mutableListOf<CommitsByDeveloper>()
         commits.groupBy { it.commitShortInfo.author.name }
-                .forEach {
-                    commitsByDevelopers.add(CommitsByDeveloper(
-                            developerName = it.key,
-                            commits = it.value.size))
-                }
+                .forEach { (authorName, commits) -> commitsByDevelopers.add(CommitsByDeveloper(authorName, commits.size)) }
         return ContributionResponse(commits.size, commitsByDevelopers)
+    }
+
+    private fun generateModificationResponse(commits: Array<GHCommit>): ModificationResponse {
+        val modificationsByDate = mutableListOf<ModificationsByDate>()
+        commits.groupBy { it.commitShortInfo.commitDate.month }
+                .forEach { (month, commits) ->
+                    val linesAdded = commits.sumBy { commit -> commit.linesAdded }
+                    val linesDeleted = commits.sumBy { commit -> commit.linesDeleted }
+                    modificationsByDate.add(ModificationsByDate(commits.get(0).commitDate.year, month, linesAdded, linesDeleted))
+                }
+        return ModificationResponse(modificationsByDate)
     }
 }
