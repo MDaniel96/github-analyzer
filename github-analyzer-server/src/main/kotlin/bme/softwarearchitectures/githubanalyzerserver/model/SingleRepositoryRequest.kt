@@ -2,7 +2,7 @@ package bme.softwarearchitectures.githubanalyzerserver.model
 
 class SingleRepositoryRequest(
         val repositoryUrl: String,
-        val accessToken: String = ""
+        val accessToken: String?
 ) {
 
     val repositoryId: String
