@@ -7,7 +7,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.web.filter.CorsFilter
 import org.springframework.web.servlet.config.annotation.EnableWebMvc
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
-import java.util.*
 
 
 @Configuration
@@ -19,9 +18,9 @@ class WebConfig : WebMvcConfigurer {
         val source = UrlBasedCorsConfigurationSource()
         val config = CorsConfiguration().apply {
             allowCredentials = true
-            allowedOrigins = Arrays.asList("http://localhost:4200")
-            allowedHeaders = Arrays.asList("Origin", "Content-Type", "Accept")
-            allowedMethods = Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            allowedOrigins = listOf("*")
+            allowedHeaders = listOf("Origin", "Content-Type", "Accept")
+            allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
         }
         source.registerCorsConfiguration("/**", config)
         return CorsFilter(source)
