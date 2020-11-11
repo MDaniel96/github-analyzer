@@ -19,5 +19,4 @@ class SingleRepositoryController(val singleRepositoryService: SingleRepositorySe
             singleRepositoryService.getRepositoryInfo(repositoryUrl)?.let {
                 ResponseEntity.ok(it)
             } ?: ResponseEntity.noContent().build()
-
 }
