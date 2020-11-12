@@ -13,3 +13,11 @@ mat-card {
   margin-bottom: 40px;
   background: #D2EDF6;
 }
+
+h4 {
+  margin-top: 8px;
+}
+
+h6 {
+  margin-top: 12px;
+}

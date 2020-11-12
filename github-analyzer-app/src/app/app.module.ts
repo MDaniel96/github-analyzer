@@ -19,6 +19,7 @@ import {ContributionComponent} from './components/charts/contribution/contributi
 import {ModificationComponent} from './components/charts/modification/modification.component';
 import {DistributionComponent} from './components/charts/distribution/distribution.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     MatCheckboxModule,
     MatButtonModule,
     FormsModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatExpansionModule
   ],
   providers: [
     SingleRepositoryService

@@ -4,6 +4,7 @@ export abstract class ChartsComponent {
 
   visible = false;
   intervalId = null;
+  panelOpen = true;
 
   abstract getResultCallback: () => void;
 

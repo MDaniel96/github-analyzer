@@ -1,15 +1,16 @@
-<mat-card *ngIf="visible">
-  <mat-card-title class="mb-3">
-    Modification chart
-  </mat-card-title>
-  <mat-card-subtitle>
-    Number of lines of code added and deleted in a given time period
-  </mat-card-subtitle>
-  <mat-card-content>
-    <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
+<mat-expansion-panel *ngIf="visible"
+                     [expanded]="panelOpen" (toggle)="panelOpen = !panelOpen">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <h4>Modification chart</h4>
+    </mat-panel-title>
+    <mat-panel-description>
+      <h6>Number of lines of code added and deleted in a given time period</h6>
+    </mat-panel-description>
+  </mat-expansion-panel-header>
+  <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
 
-    <!-- TODO: Draw modification diagram here -->
-    <pre>{{toString(modificationResponse)}}</pre>
+  <!-- TODO: Draw modification diagram here -->
+  <pre>{{toString(modificationResponse)}}</pre>
 
-  </mat-card-content>
-</mat-card>
+</mat-expansion-panel>
