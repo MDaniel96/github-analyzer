@@ -1,6 +1,6 @@
 package bme.softwarearchitectures.githubanalyzerserver.model
 
-class SingleRepositoryRequest(
+data class SingleRepositoryRequest(
         val repositoryUrl: String,
         val accessToken: String?
 ) {

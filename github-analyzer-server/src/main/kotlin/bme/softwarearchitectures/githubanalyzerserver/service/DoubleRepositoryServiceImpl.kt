@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service
 @Service
 class DoubleRepositoryServiceImpl : DoubleRepositoryService {
 
+    val doubleRepositoryResultMap = mutableMapOf<DoubleRepositoryRequest, DoubleRepositoryResult>()
+
     private val github = GitHub.connectAnonymously()
 
     override fun analyze(request: DoubleRepositoryRequest) {
-        // TODO: analyze repository and save it to memory db
-        // TODO: analyze private repository
-
         val githubAPI = request.accessToken?.let {
             GitHub.connectUsingOAuth(request.accessToken)
         } ?: github
@@ -29,14 +28,11 @@ class DoubleRepositoryServiceImpl : DoubleRepositoryService {
             val developerCompare = generateDeveloperCompareResponse(commits1, commits2)
 
             val result = DoubleRepositoryResult(ghRepository1.name, ghRepository2.name, developmentCompare, developerCompare)
-            println(result)
+            doubleRepositoryResultMap.put(request, result)
         }
     }
 
-    override fun getRepositoryInfo(repository1Url: String, repository2Url: String, accessToken: String): DoubleRepositoryResult? {
-        // TODO: return analyzed repository from memory db or null if not found
-        return null
-    }
+    override fun getRepositoryInfo(request: DoubleRepositoryRequest) = doubleRepositoryResultMap[request]
 
     private fun generateDevelopmentCompareResponse(commits1: Array<GHCommit>, commits2: Array<GHCommit>): DevelopmentCompareResponse {
         val repository1Developers = commits1.groupBy { it.commitShortInfo.author.name }.count()

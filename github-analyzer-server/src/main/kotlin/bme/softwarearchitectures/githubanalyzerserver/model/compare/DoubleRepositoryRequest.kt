@@ -1,6 +1,6 @@
 package bme.softwarearchitectures.githubanalyzerserver.model.compare
 
-class DoubleRepositoryRequest(
+data class DoubleRepositoryRequest(
         val repository1Url: String,
         val repository2Url: String,
         val accessToken: String?

@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service
 @Service
 class SingleRepositoryServiceImpl : SingleRepositoryService {
 
+    val singleRepositoryResultMap = mutableMapOf<SingleRepositoryRequest, SingleRepositoryResult>()
+
     private val github = GitHub.connectAnonymously()
 
     override fun analyze(request: SingleRepositoryRequest) {
-        // TODO: analyze repository and save it to memory db
-        // TODO: analyze private repository
-
         val githubAPI = request.accessToken?.let {
             GitHub.connectUsingOAuth(request.accessToken)
         } ?: github
@@ -27,14 +26,11 @@ class SingleRepositoryServiceImpl : SingleRepositoryService {
             val distribution = generateDistributionResponse(commits)
 
             val result = SingleRepositoryResult(repository.name, contribution, modification, distribution)
-            println(result)
+            singleRepositoryResultMap.put(request, result)
         }
     }
 
-    override fun getRepositoryInfo(repositoryUrl: String, accessToken: String): SingleRepositoryResult? {
-        // TODO: return analyzed repository from memory db or null if not found
-        return null
-    }
+    override fun getRepositoryInfo(request: SingleRepositoryRequest) = singleRepositoryResultMap[request]
 
     private fun generateContributionResponse(commits: Array<GHCommit>): ContributionResponse {
         val commitsByDevelopers = mutableListOf<CommitsByDeveloper>()
@@ -45,10 +41,15 @@ class SingleRepositoryServiceImpl : SingleRepositoryService {
 
     private fun generateModificationResponse(commits: Array<GHCommit>): ModificationResponse {
         val modificationsByDate = mutableListOf<ModificationsByDate>()
+
         commits.groupBy { "${it.commitShortInfo.commitDate.year}|${it.commitShortInfo.commitDate.month}" }
                 .forEach { (date, commits) ->
-                    val linesAdded = commits.sumBy { commit -> commit.linesAdded }
-                    val linesDeleted = commits.sumBy { commit -> commit.linesDeleted }
+                    var linesAdded = 0
+                    var linesDeleted = 0
+                    commits.forEach { commit ->
+                        linesAdded += commit.linesAdded
+                        linesDeleted += commit.linesDeleted
+                    }
                     val splitDate = date.split("|")
                     modificationsByDate.add(ModificationsByDate(1900 + splitDate[0].toInt(), splitDate[1].toInt(), linesAdded, linesDeleted))
                 }

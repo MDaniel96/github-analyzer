@@ -7,5 +7,5 @@ interface SingleRepositoryService {
 
     fun analyze(request: SingleRepositoryRequest)
 
-    fun getRepositoryInfo(repositoryUrl: String, accessToken: String = ""): SingleRepositoryResult?
+    fun getRepositoryInfo(request: SingleRepositoryRequest): SingleRepositoryResult?
 }

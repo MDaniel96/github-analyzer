@@ -7,5 +7,5 @@ interface DoubleRepositoryService {
 
     fun analyze(request: DoubleRepositoryRequest)
 
-    fun getRepositoryInfo(repository1Url: String, repository2Url: String, accessToken: String = ""): DoubleRepositoryResult?
+    fun getRepositoryInfo(request: DoubleRepositoryRequest): DoubleRepositoryResult?
 }
