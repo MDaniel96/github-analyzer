@@ -1,0 +1,15 @@
+<mat-card *ngIf="visible">
+  <mat-card-title class="mb-3">
+    Contribution chart
+  </mat-card-title>
+  <mat-card-subtitle>
+    Developers contribution to repository
+  </mat-card-subtitle>
+  <mat-card-content>
+    <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
+
+    <!-- TODO: Draw contribution diagram here -->
+    <pre>{{toString(contributionResponse)}}</pre>
+
+  </mat-card-content>
+</mat-card>

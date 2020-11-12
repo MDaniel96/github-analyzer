@@ -6,21 +6,48 @@ import {SingleRepositoryComponent} from './pages/single-repository/single-reposi
 import {DoubleRepositoryComponent} from './pages/double-repository/double-repository.component';
 import {AppRoutingModule} from './app-routing.module';
 import {HeaderComponent} from './components/header/header.component';
+import {SearchComponent} from './components/search/search.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
+import {FormsModule} from '@angular/forms';
+import {SingleRepositoryService} from './service/single-repository.service';
+import {ContributionComponent} from './components/charts/contribution/contribution.component';
+import {ModificationComponent} from './components/charts/modification/modification.component';
+import {DistributionComponent} from './components/charts/distribution/distribution.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
     AppComponent,
     SingleRepositoryComponent,
     DoubleRepositoryComponent,
-    HeaderComponent
+    HeaderComponent,
+    SearchComponent,
+    ContributionComponent,
+    ModificationComponent,
+    DistributionComponent
   ],
   imports: [
     AppRoutingModule,
     BrowserModule,
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatButtonModule,
+    FormsModule,
+    MatProgressSpinnerModule
   ],
   providers: [
+    SingleRepositoryService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

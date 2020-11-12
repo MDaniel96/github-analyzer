@@ -17,9 +17,21 @@ class SingleRepositoryController(val singleRepositoryService: SingleRepositorySe
         singleRepositoryService.analyze(request)
     }
 
-    @PostMapping
-    fun getRepositoryInfo(@RequestBody request: SingleRepositoryRequest) =
-            singleRepositoryService.getRepositoryInfo(request)?.let {
+    @PostMapping("/contribution")
+    fun getContributionResult(@RequestBody request: SingleRepositoryRequest) =
+            singleRepositoryService.getContributionResultMap(request)?.let {
                 ResponseEntity.ok(it)
-            } ?: ResponseEntity.notFound().build()
+            } ?: ResponseEntity.ok().build()
+
+    @PostMapping("/modification")
+    fun getModificationResult(@RequestBody request: SingleRepositoryRequest) =
+            singleRepositoryService.getModificationResultMap(request)?.let {
+                ResponseEntity.ok(it)
+            } ?: ResponseEntity.ok().build()
+
+    @PostMapping("/distribution")
+    fun getDistributionResult(@RequestBody request: SingleRepositoryRequest) =
+            singleRepositoryService.getDistributionResultMap(request)?.let {
+                ResponseEntity.ok(it)
+            } ?: ResponseEntity.ok().build()
 }

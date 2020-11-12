@@ -1,36 +1,41 @@
 package bme.softwarearchitectures.githubanalyzerserver.service
 
+import bme.softwarearchitectures.githubanalyzerserver.config.AppConfig
 import bme.softwarearchitectures.githubanalyzerserver.model.*
 import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
 
 @Service
-class SingleRepositoryServiceImpl : SingleRepositoryService {
+class SingleRepositoryServiceImpl(val appConfig: AppConfig) : SingleRepositoryService {
 
-    val singleRepositoryResultMap = mutableMapOf<SingleRepositoryRequest, SingleRepositoryResult>()
-
-    private val github = GitHub.connectAnonymously()
+    val contributionResultMap = mutableMapOf<SingleRepositoryRequest, ContributionResponse>()
+    val modificationResultMap = mutableMapOf<SingleRepositoryRequest, ModificationResponse>()
+    val distributionResultMap = mutableMapOf<SingleRepositoryRequest, DistributionResponse>()
 
     override fun analyze(request: SingleRepositoryRequest) {
-        val githubAPI = request.accessToken?.let {
-            GitHub.connectUsingOAuth(request.accessToken)
-        } ?: github
+        val gitHubAPI = GitHub.connectUsingOAuth(
+                if (request.accessToken != "")
+                    request.accessToken
+                else
+                    appConfig.accessToken
+        )
 
-        val ghRepository = githubAPI.getRepository(request.repositoryId)
+        val ghRepository = gitHubAPI.getRepository(request.repositoryId)
         ghRepository?.let { repository ->
             val commits = repository.listCommits().toArray()
 
-            val contribution = generateContributionResponse(commits)
-            val modification = generateModificationResponse(commits)
-            val distribution = generateDistributionResponse(commits)
-
-            val result = SingleRepositoryResult(repository.name, contribution, modification, distribution)
-            singleRepositoryResultMap.put(request, result)
+            contributionResultMap[request] = generateContributionResponse(commits)
+            distributionResultMap[request] = generateDistributionResponse(commits)
+            modificationResultMap[request] = generateModificationResponse(commits)
         }
     }
 
-    override fun getRepositoryInfo(request: SingleRepositoryRequest) = singleRepositoryResultMap[request]
+    override fun getContributionResultMap(request: SingleRepositoryRequest) = contributionResultMap[request]
+
+    override fun getModificationResultMap(request: SingleRepositoryRequest) = modificationResultMap[request]
+
+    override fun getDistributionResultMap(request: SingleRepositoryRequest) = distributionResultMap[request]
 
     private fun generateContributionResponse(commits: Array<GHCommit>): ContributionResponse {
         val commitsByDevelopers = mutableListOf<CommitsByDeveloper>()

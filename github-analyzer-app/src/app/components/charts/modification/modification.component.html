@@ -1,0 +1,15 @@
+<mat-card *ngIf="visible">
+  <mat-card-title class="mb-3">
+    Modification chart
+  </mat-card-title>
+  <mat-card-subtitle>
+    Number of lines of code added and deleted in a given time period
+  </mat-card-subtitle>
+  <mat-card-content>
+    <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
+
+    <!-- TODO: Draw modification diagram here -->
+    <pre>{{toString(modificationResponse)}}</pre>
+
+  </mat-card-content>
+</mat-card>

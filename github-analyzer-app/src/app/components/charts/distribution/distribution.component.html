@@ -1,0 +1,15 @@
+<mat-card *ngIf="visible">
+  <mat-card-title class="mb-3">
+    Distribution chart
+  </mat-card-title>
+  <mat-card-subtitle>
+    Time distribution of number of commits
+  </mat-card-subtitle>
+  <mat-card-content>
+    <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
+
+    <!-- TODO: Draw distribution diagram here -->
+    <pre>{{toString(distributionResponse)}}</pre>
+
+  </mat-card-content>
+</mat-card>
