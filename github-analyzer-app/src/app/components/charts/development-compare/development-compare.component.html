@@ -2,15 +2,15 @@
                      [expanded]="panelOpen" (toggle)="panelOpen = !panelOpen">
   <mat-expansion-panel-header>
     <mat-panel-title>
-      <h4>Distribution chart</h4>
+      <h4>Development compare chart</h4>
     </mat-panel-title>
     <mat-panel-description>
-      <h6>Time distribution of number of commits</h6>
+      <h6>Comparison of number of commits by month at last year of development</h6>
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
 
-  <!-- TODO: Draw distribution diagram here -->
-  <pre>{{toString(distributionResponse)}}</pre>
+  <!-- TODO: Draw development compare diagram here -->
+  <pre>{{toString(developmentCompareResponse)}}</pre>
 
 </mat-expansion-panel>

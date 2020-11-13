@@ -2,11 +2,13 @@ import {Component} from '@angular/core';
 import {ChartsComponent} from '../charts.component';
 import {SingleRepositoryService} from '../../../service/single-repository.service';
 import {ModificationResponse} from '../../../model/modification-response.model';
+import {fadeInAnimation} from '../../../util/animations';
 
 @Component({
   selector: 'app-modification',
   templateUrl: './modification.component.html',
-  styleUrls: ['./modification.component.css']
+  styleUrls: ['./modification.component.css'],
+  animations: [fadeInAnimation]
 })
 export class ModificationComponent extends ChartsComponent {
 

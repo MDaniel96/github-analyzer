@@ -1,35 +1,29 @@
-import {EventEmitter, Injectable} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../environments/environment';
 import {SingleRepositoryRequest} from '../model/single-repository-request.model';
 import {ContributionResponse} from '../model/contribution-response.model';
 import {DistributionResponse} from '../model/distribution-response.model';
 import {ModificationResponse} from '../model/modification-response.model';
+import {RepositoryService} from './repository.service';
 
 export const SINGLE_REPOSITORY_API = environment.apiUrl + '/api/repository/single';
 
 @Injectable()
-export class SingleRepositoryService {
+export class SingleRepositoryService extends RepositoryService {
 
   request: SingleRepositoryRequest = new SingleRepositoryRequest();
 
-  analyzeStarted = new EventEmitter<void>();
-  analyzeFailed = new EventEmitter<void>();
-
-  constructor(private httpClient: HttpClient) {
+  constructor(httpClient: HttpClient) {
+    super(httpClient);
   }
 
-  analyze() {
-    this.analyzeStarted.emit();
-    const url = SINGLE_REPOSITORY_API + '/analyze';
-    return this.httpClient.post(url, this.request).subscribe(
-      () => {
-      },
-      () => {
-        alert('Error occurred: Invalid repository url or access token provided.');
-        this.analyzeFailed.emit();
-      }
-    );
+  getAPI(): string {
+    return SINGLE_REPOSITORY_API;
+  }
+
+  getRequest() {
+    return this.request;
   }
 
   getContributionResult() {

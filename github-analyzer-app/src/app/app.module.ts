@@ -20,6 +20,10 @@ import {ModificationComponent} from './components/charts/modification/modificati
 import {DistributionComponent} from './components/charts/distribution/distribution.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatExpansionModule} from '@angular/material/expansion';
+import {DevelopmentCompareComponent} from './components/charts/development-compare/development-compare.component';
+import {DeveloperCompareComponent} from './components/charts/developer-compare/developer-compare.component';
+import {SearchCompareComponent} from './components/search-compare/search-compare.component';
+import {DoubleRepositoryService} from './service/double-repository.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,10 @@ import {MatExpansionModule} from '@angular/material/expansion';
     SearchComponent,
     ContributionComponent,
     ModificationComponent,
-    DistributionComponent
+    DistributionComponent,
+    DevelopmentCompareComponent,
+    DeveloperCompareComponent,
+    SearchCompareComponent
   ],
   imports: [
     AppRoutingModule,
@@ -47,7 +54,8 @@ import {MatExpansionModule} from '@angular/material/expansion';
     MatExpansionModule
   ],
   providers: [
-    SingleRepositoryService
+    SingleRepositoryService,
+    DoubleRepositoryService
   ],
   bootstrap: [AppComponent]
 })

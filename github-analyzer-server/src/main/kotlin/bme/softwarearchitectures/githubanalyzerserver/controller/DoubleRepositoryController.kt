@@ -17,9 +17,15 @@ class DoubleRepositoryController(val doubleRepositoryService: DoubleRepositorySe
         doubleRepositoryService.analyze(request)
     }
 
-    @PostMapping
-    fun getRepositoryInfo(@RequestBody request: DoubleRepositoryRequest) =
-            doubleRepositoryService.getRepositoryInfo(request)?.let {
+    @PostMapping("/development")
+    fun getDevelopmentCompareResult(@RequestBody request: DoubleRepositoryRequest) =
+            doubleRepositoryService.getDevelopmentCompareResult(request)?.let {
                 ResponseEntity.ok(it)
-            } ?: ResponseEntity.noContent().build()
+            } ?: ResponseEntity.ok().build()
+
+    @PostMapping("/developer")
+    fun getDeveloperCompareResult(@RequestBody request: DoubleRepositoryRequest) =
+            doubleRepositoryService.getDeveloperCompareResult(request)?.let {
+                ResponseEntity.ok(it)
+            } ?: ResponseEntity.ok().build()
 }

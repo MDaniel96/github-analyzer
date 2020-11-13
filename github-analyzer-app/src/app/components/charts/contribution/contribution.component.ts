@@ -2,11 +2,13 @@ import {Component} from '@angular/core';
 import {SingleRepositoryService} from '../../../service/single-repository.service';
 import {ContributionResponse} from '../../../model/contribution-response.model';
 import {ChartsComponent} from '../charts.component';
+import {fadeInAnimation} from '../../../util/animations';
 
 @Component({
   selector: 'app-contribution',
   templateUrl: './contribution.component.html',
-  styleUrls: ['./contribution.component.css']
+  styleUrls: ['./contribution.component.css'],
+  animations: [fadeInAnimation]
 })
 export class ContributionComponent extends ChartsComponent {
 

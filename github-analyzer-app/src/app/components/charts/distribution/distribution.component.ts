@@ -2,11 +2,13 @@ import {Component} from '@angular/core';
 import {ChartsComponent} from '../charts.component';
 import {SingleRepositoryService} from '../../../service/single-repository.service';
 import {DistributionResponse} from '../../../model/distribution-response.model';
+import {fadeInAnimation} from '../../../util/animations';
 
 @Component({
   selector: 'app-distribution',
   templateUrl: './distribution.component.html',
-  styleUrls: ['./distribution.component.css']
+  styleUrls: ['./distribution.component.css'],
+  animations: [fadeInAnimation]
 })
 export class DistributionComponent extends ChartsComponent {
 

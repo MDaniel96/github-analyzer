@@ -1,38 +1,50 @@
 package bme.softwarearchitectures.githubanalyzerserver.service
 
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.*
+import bme.softwarearchitectures.githubanalyzerserver.config.AppConfig
+import bme.softwarearchitectures.githubanalyzerserver.model.compare.CommitsByMonth
+import bme.softwarearchitectures.githubanalyzerserver.model.compare.DeveloperCompareResponse
+import bme.softwarearchitectures.githubanalyzerserver.model.compare.DevelopmentCompareResponse
+import bme.softwarearchitectures.githubanalyzerserver.model.compare.DoubleRepositoryRequest
 import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
 
 @Service
-class DoubleRepositoryServiceImpl : DoubleRepositoryService {
+class DoubleRepositoryServiceImpl(val appConfig: AppConfig) : DoubleRepositoryService {
 
-    val doubleRepositoryResultMap = mutableMapOf<DoubleRepositoryRequest, DoubleRepositoryResult>()
-
-    private val github = GitHub.connectAnonymously()
+    val developmentCompareResultMap = mutableMapOf<DoubleRepositoryRequest, DevelopmentCompareResponse>()
+    val developerCompareResultMap = mutableMapOf<DoubleRepositoryRequest, DeveloperCompareResponse>()
 
     override fun analyze(request: DoubleRepositoryRequest) {
-        val githubAPI = request.accessToken?.let {
-            GitHub.connectUsingOAuth(request.accessToken)
-        } ?: github
+        val gitHubAPI1 = GitHub.connectUsingOAuth(
+                if (request.access1Token != "")
+                    request.access1Token
+                else
+                    appConfig.accessToken
+        )
 
-        val ghRepository1 = githubAPI.getRepository(request.repository1Id)
-        val ghRepository2 = githubAPI.getRepository(request.repository2Id)
+        val gitHubAPI2 = GitHub.connectUsingOAuth(
+                if (request.access2Token != "")
+                    request.access2Token
+                else
+                    appConfig.accessToken
+        )
+
+        val ghRepository1 = gitHubAPI1.getRepository(request.repository1Id)
+        val ghRepository2 = gitHubAPI2.getRepository(request.repository2Id)
 
         if (ghRepository1 !== null && ghRepository2 !== null) {
             val commits1 = ghRepository1.listCommits().toArray()
             val commits2 = ghRepository2.listCommits().toArray()
 
-            val developmentCompare = generateDevelopmentCompareResponse(commits1, commits2)
-            val developerCompare = generateDeveloperCompareResponse(commits1, commits2)
-
-            val result = DoubleRepositoryResult(ghRepository1.name, ghRepository2.name, developmentCompare, developerCompare)
-            doubleRepositoryResultMap.put(request, result)
+            developmentCompareResultMap[request] = generateDevelopmentCompareResponse(commits1, commits2)
+            developerCompareResultMap[request] = generateDeveloperCompareResponse(commits1, commits2)
         }
     }
 
-    override fun getRepositoryInfo(request: DoubleRepositoryRequest) = doubleRepositoryResultMap[request]
+    override fun getDevelopmentCompareResult(request: DoubleRepositoryRequest) = developmentCompareResultMap[request]
+
+    override fun getDeveloperCompareResult(request: DoubleRepositoryRequest) = developerCompareResultMap[request]
 
     private fun generateDevelopmentCompareResponse(commits1: Array<GHCommit>, commits2: Array<GHCommit>): DevelopmentCompareResponse {
         val repository1Developers = commits1.groupBy { it.commitShortInfo.author.name }.count()

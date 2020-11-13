@@ -1,0 +1,54 @@
+<mat-card>
+  <mat-card-title class="mb-3">
+    Compare two repositories
+  </mat-card-title>
+  <mat-card-content>
+    <form>
+      <div class="row">
+        <mat-form-field class="col-8">
+          <mat-label>Repository url</mat-label>
+          <input [(ngModel)]="doubleRepositoryService.request.repository1Url" name="repositoryUrl" matInput>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="doubleRepositoryService.request.isRepository1Private" name="isRepositoryPrivate"
+                      class="col-1" color="primary">Private
+        </mat-checkbox>
+        <div class="col-1"></div>
+      </div>
+      <div *ngIf="doubleRepositoryService.request.isRepository1Private"
+           [@expandCollapse]='doubleRepositoryService.request.isRepository1Private'
+           class="row">
+        <mat-form-field class="col-8">
+          <mat-label>Access token to private repository</mat-label>
+          <input [(ngModel)]="doubleRepositoryService.request.access1Token" name="accessToken" matInput>
+        </mat-form-field>
+      </div>
+      <br>
+      <br>
+      <div class="row">
+        <mat-form-field class="col-8">
+          <mat-label>Repository url</mat-label>
+          <input [(ngModel)]="doubleRepositoryService.request.repository2Url" name="repositoryUrl" matInput>
+        </mat-form-field>
+        <mat-checkbox [(ngModel)]="doubleRepositoryService.request.isRepository2Private" name="isRepositoryPrivate"
+                      class="col-1" color="primary">Private
+        </mat-checkbox>
+        <div class="col-1"></div>
+        <div class="col-2">
+          <a mat-button [disabled]="isSearchDisabled()"
+             [ngClass]="isSearchDisabled() ? 'bg-light btn-analyze-disabled' : 'bg-info btn-analyze-enabled'"
+             (click)="!isSearchDisabled() && doubleRepositoryService.analyze()">
+            Analyze
+          </a>
+        </div>
+      </div>
+      <div *ngIf="doubleRepositoryService.request.isRepository2Private"
+           [@expandCollapse]='doubleRepositoryService.request.isRepository2Private'
+           class="row">
+        <mat-form-field class="col-8">
+          <mat-label>Access token to private repository</mat-label>
+          <input [(ngModel)]="doubleRepositoryService.request.access2Token" name="accessToken" matInput>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

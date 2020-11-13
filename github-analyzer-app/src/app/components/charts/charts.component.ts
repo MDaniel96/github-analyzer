@@ -1,4 +1,4 @@
-import {SingleRepositoryService} from '../../service/single-repository.service';
+import {RepositoryService} from '../../service/repository.service';
 
 export abstract class ChartsComponent {
 
@@ -12,14 +12,14 @@ export abstract class ChartsComponent {
 
   abstract clearResult();
 
-  checkAnalyze(singleRepositoryService: SingleRepositoryService) {
-    singleRepositoryService.analyzeStarted.subscribe(
+  checkAnalyze(service: RepositoryService) {
+    service.analyzeStarted.subscribe(
       () => {
         this.startQueryData();
         this.clearResult();
       }
     );
-    singleRepositoryService.analyzeFailed.subscribe(
+    service.analyzeFailed.subscribe(
       () => {
         this.stopQueryData();
       }
