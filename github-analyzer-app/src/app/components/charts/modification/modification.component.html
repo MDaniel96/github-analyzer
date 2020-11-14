@@ -11,6 +11,13 @@
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
 
   <!-- TODO: Draw modification diagram here -->
-  <pre>{{toString(modificationResponse)}}</pre>
+  <pre>
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [labels]="chartOptions.labels"
+    ></apx-chart>
+    {{toString(modificationResponse)}}
+  </pre>
 
 </mat-expansion-panel>

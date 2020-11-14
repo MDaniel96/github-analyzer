@@ -24,6 +24,7 @@ import {DevelopmentCompareComponent} from './components/charts/development-compa
 import {DeveloperCompareComponent} from './components/charts/developer-compare/developer-compare.component';
 import {SearchCompareComponent} from './components/search-compare/search-compare.component';
 import {DoubleRepositoryService} from './service/double-repository.service';
+import {NgApexchartsModule} from "ng-apexcharts";
 
 @NgModule({
   declarations: [
@@ -39,20 +40,21 @@ import {DoubleRepositoryService} from './service/double-repository.service';
     DeveloperCompareComponent,
     SearchCompareComponent
   ],
-  imports: [
-    AppRoutingModule,
-    BrowserModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatCardModule,
-    MatCheckboxModule,
-    MatButtonModule,
-    FormsModule,
-    MatProgressSpinnerModule,
-    MatExpansionModule
-  ],
+    imports: [
+        AppRoutingModule,
+        BrowserModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCardModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        FormsModule,
+        MatProgressSpinnerModule,
+        MatExpansionModule,
+        NgApexchartsModule
+    ],
   providers: [
     SingleRepositoryService,
     DoubleRepositoryService

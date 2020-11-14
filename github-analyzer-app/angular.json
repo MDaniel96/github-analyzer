@@ -28,7 +28,9 @@
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/apexcharts/dist/apexcharts.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -122,6 +124,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "github-analyzer-app"
+    }
+  },
+  "defaultProject": "github-analyzer-app",
+  "cli": {
+    "analytics": false
+  }
 }

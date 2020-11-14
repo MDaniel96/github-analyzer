@@ -11,6 +11,13 @@
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
 
   <!-- TODO: Draw developer compare diagram here -->
-  <pre>{{toString(developerCompareResponse)}}</pre>
+  <pre>
+    <apx-chart
+      [series]="chartOptionsMonth.series"
+      [chart]="chartOptionsMonth.chart"
+      [xaxis]="chartOptionsMonth.xaxis"
+    ></apx-chart>
+    {{toString(developerCompareResponse)}}
+  </pre>
 
 </mat-expansion-panel>
