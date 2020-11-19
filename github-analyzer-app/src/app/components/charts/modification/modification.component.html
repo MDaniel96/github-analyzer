@@ -9,9 +9,31 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
-  <apx-chart *ngIf="chartOptions"
-             [series]="chartOptions.series"
-             [chart]="chartOptions.chart"
-             [labels]="chartOptions.labels"
-  ></apx-chart>
+  <div class="row">
+    <div class="col-4">
+      <mat-form-field appearance="fill">
+        <mat-label>Select year</mat-label>
+        <mat-select (selectionChange)="yearSelected($event)">
+          <mat-option *ngFor="let year of years" [value]="year">
+            {{year}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label>Select month</mat-label>
+        <mat-select (selectionChange)="monthSelected($event)">
+          <mat-option *ngFor="let month of months" [value]="month">
+            {{displayMonth(month)}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <apx-chart class="col-8" *ngIf="chartOptions"
+               [series]="chartOptions.series"
+               [chart]="chartOptions.chart"
+               [labels]="chartOptions.labels"
+    ></apx-chart>
+
+  </div>
 </mat-expansion-panel>
