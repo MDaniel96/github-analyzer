@@ -9,15 +9,9 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
-
-  <!-- TODO: Draw developer compare diagram here -->
-  <pre>
-    <apx-chart
-      [series]="chartOptionsMonth.series"
-      [chart]="chartOptionsMonth.chart"
-      [xaxis]="chartOptionsMonth.xaxis"
-    ></apx-chart>
-    {{toString(developerCompareResponse)}}
-  </pre>
-
+  <apx-chart *ngIf="chartOptions"
+             [series]="chartOptions.series"
+             [chart]="chartOptions.chart"
+             [xaxis]="chartOptions.xaxis"
+  ></apx-chart>
 </mat-expansion-panel>

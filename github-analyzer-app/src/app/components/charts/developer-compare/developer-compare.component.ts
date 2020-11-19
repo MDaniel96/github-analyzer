@@ -3,8 +3,9 @@ import {ChartsComponent} from '../charts.component';
 import {DoubleRepositoryService} from '../../../service/double-repository.service';
 import {DeveloperCompareResponse} from '../../../model/developer-compare-response.model';
 import {fadeInAnimation} from '../../../util/animations';
-import {ChartComponent} from "ng-apexcharts";
-import {ChartOptions} from "../distribution/distribution.component";
+import {ChartComponent} from 'ng-apexcharts';
+import {ChartOptions} from '../distribution/distribution.component';
+import {CommitsByMonth} from '../../../model/commits-by-month.model';
 
 @Component({
   selector: 'app-developer-compare',
@@ -14,8 +15,10 @@ import {ChartOptions} from "../distribution/distribution.component";
 })
 export class DeveloperCompareComponent extends ChartsComponent {
 
-  @ViewChild("chart") chart: ChartComponent;
-  public chartOptionsMonth: Partial<ChartOptions>;
+  @ViewChild('chart') chart: ChartComponent;
+
+  chartOptions: Partial<ChartOptions>;
+
   developerCompareResponse: DeveloperCompareResponse;
 
   months1: number[] = [];
@@ -35,45 +38,50 @@ export class DeveloperCompareComponent extends ChartsComponent {
         if (data !== null) {
           this.stopQueryData();
           this.developerCompareResponse = data;
-          this.preProcessCommits()
+          this.preProcessCommits();
           this.drawChart();
         }
       }
     );
   }
 
-  preProcessCommits(){
-    this.developerCompareResponse.developer1CommitsByMonth.forEach(element => {
-      this.months1.push(element.month);
-      this.commitsPerMonth1.push(element.commits);
-    })
+  preProcessCommits() {
+    this.processCommitsByMonth(this.developerCompareResponse.developer1CommitsByMonth, this.months1, this.commitsPerMonth1);
+    this.processCommitsByMonth(this.developerCompareResponse.developer2CommitsByMonth, this.months2, this.commitsPerMonth2);
+  }
 
-    this.developerCompareResponse.developer2CommitsByMonth.forEach(element => {
-      this.months2.push(element.month);
-      this.commitsPerMonth2.push(element.commits);
-    })
+  private processCommitsByMonth(commitsByMonth: CommitsByMonth[], months: number[], commitsPerMonth: number[]) {
+    commitsByMonth.forEach(commitByMonth => {
+      months.push(commitByMonth.month);
+      commitsPerMonth.push(commitByMonth.commits);
+    });
   }
 
   clearResult() {
     this.developerCompareResponse = new DeveloperCompareResponse();
+
+    this.months1 = [];
+    this.commitsPerMonth1 = [];
+
+    this.months2 = [];
+    this.commitsPerMonth2 = [];
   }
 
   drawChart() {
-    // TODO: Draw developerCompare diagram from <this.developerCompareResult>
-    this.chartOptionsMonth = {
+    this.chartOptions = {
       series: [
         {
-          name: "Repository 1 top developer",
+          name: 'Repository 1 top developer',
           data: this.commitsPerMonth1
         },
         {
-          name: "Repository 2 top developer",
+          name: 'Repository 2 top developer',
           data: this.commitsPerMonth2
         }
       ],
       chart: {
         height: 350,
-        type: "line",
+        type: 'line',
         zoom: {
           enabled: false
         }
@@ -82,11 +90,11 @@ export class DeveloperCompareComponent extends ChartsComponent {
         enabled: false
       },
       stroke: {
-        curve: "straight"
+        curve: 'straight'
       },
       grid: {
         row: {
-          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          colors: ['#f3f3f3', 'transparent'],
           opacity: 0.5
         }
       },
