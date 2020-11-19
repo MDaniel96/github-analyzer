@@ -19,11 +19,17 @@ export class DevelopmentCompareComponent extends ChartsComponent {
 
   public chartOptions: Partial<ChartOptions>;
 
-  months1: number[] = [];
+  months1: string[] = [];
   commitsPerMonth1: number[] = [];
 
-  months2: number[] = [];
+  months2: string[] = [];
   commitsPerMonth2: number[] = [];
+
+  repository1Name = '';
+  repository2Name = '';
+
+  repository1Year: number;
+  repository2Year: number;
 
   developmentCompareResponse: DevelopmentCompareResponse;
 
@@ -38,6 +44,10 @@ export class DevelopmentCompareComponent extends ChartsComponent {
         if (data !== null) {
           this.stopQueryData();
           this.developmentCompareResponse = data;
+          this.repository1Name = this.doubleRepositoryService.request.repository1Url.split('/')[4];
+          this.repository2Name = this.doubleRepositoryService.request.repository2Url.split('/')[4];
+          this.repository1Year = this.developmentCompareResponse.repository1CommitsByMonth[0].year;
+          this.repository2Year = this.developmentCompareResponse.repository2CommitsByMonth[0].year;
           this.preProcessCommits();
           this.drawChart();
         }
@@ -50,9 +60,12 @@ export class DevelopmentCompareComponent extends ChartsComponent {
     this.processCommitsByMonth(this.developmentCompareResponse.repository2CommitsByMonth, this.months2, this.commitsPerMonth2);
   }
 
-  private processCommitsByMonth(commitsByMonth: CommitsByMonth[], months: number[], commitsPerMonth: number[]) {
+  private processCommitsByMonth(commitsByMonth: CommitsByMonth[], months: string[], commitsPerMonth: number[]) {
+    const monthList = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+
     commitsByMonth.forEach(commitByMonth => {
-      months.push(commitByMonth.month);
+      months.push(monthList[commitByMonth.month]);
       commitsPerMonth.push(commitByMonth.commits);
     });
   }
@@ -71,11 +84,11 @@ export class DevelopmentCompareComponent extends ChartsComponent {
     this.chartOptions = {
       series: [
         {
-          name: 'Repository 1 commits',
+          name: `${this.repository1Name} (${this.repository1Year})`,
           data: this.commitsPerMonth1
         },
         {
-          name: 'Repository 2 commits',
+          name: `${this.repository2Name} (${this.repository2Year})`,
           data: this.commitsPerMonth2
         }
       ],

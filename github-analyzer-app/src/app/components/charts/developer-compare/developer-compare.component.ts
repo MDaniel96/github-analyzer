@@ -21,11 +21,14 @@ export class DeveloperCompareComponent extends ChartsComponent {
 
   developerCompareResponse: DeveloperCompareResponse;
 
-  months1: number[] = [];
+  months1: string[] = [];
   commitsPerMonth1: number[] = [];
 
-  months2: number[] = [];
+  months2: string[] = [];
   commitsPerMonth2: number[] = [];
+
+  repository1Year: number;
+  repository2Year: number;
 
   constructor(public doubleRepositoryService: DoubleRepositoryService) {
     super();
@@ -38,6 +41,8 @@ export class DeveloperCompareComponent extends ChartsComponent {
         if (data !== null) {
           this.stopQueryData();
           this.developerCompareResponse = data;
+          this.repository1Year = this.developerCompareResponse.developer1CommitsByMonth[0].year;
+          this.repository2Year = this.developerCompareResponse.developer2CommitsByMonth[0].year;
           this.preProcessCommits();
           this.drawChart();
         }
@@ -50,9 +55,12 @@ export class DeveloperCompareComponent extends ChartsComponent {
     this.processCommitsByMonth(this.developerCompareResponse.developer2CommitsByMonth, this.months2, this.commitsPerMonth2);
   }
 
-  private processCommitsByMonth(commitsByMonth: CommitsByMonth[], months: number[], commitsPerMonth: number[]) {
+  private processCommitsByMonth(commitsByMonth: CommitsByMonth[], months: string[], commitsPerMonth: number[]) {
+    const monthList = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+
     commitsByMonth.forEach(commitByMonth => {
-      months.push(commitByMonth.month);
+      months.push(monthList[commitByMonth.month]);
       commitsPerMonth.push(commitByMonth.commits);
     });
   }
@@ -71,11 +79,11 @@ export class DeveloperCompareComponent extends ChartsComponent {
     this.chartOptions = {
       series: [
         {
-          name: 'Repository 1 top developer',
+          name: `${this.developerCompareResponse.developer1Name} (${this.repository1Year})`,
           data: this.commitsPerMonth1
         },
         {
-          name: 'Repository 2 top developer',
+          name: `${this.developerCompareResponse.developer2Name} (${this.repository2Year})`,
           data: this.commitsPerMonth2
         }
       ],
