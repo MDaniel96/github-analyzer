@@ -1,18 +1,18 @@
-import { Component, ViewChild } from "@angular/core";
+import {Component, ViewChild} from '@angular/core';
 import {ChartsComponent} from '../charts.component';
 import {SingleRepositoryService} from '../../../service/single-repository.service';
 import {DistributionResponse} from '../../../model/distribution-response.model';
 import {fadeInAnimation} from '../../../util/animations';
 import {
-  ChartComponent,
   ApexAxisChartSeries,
   ApexChart,
-  ApexXAxis,
   ApexDataLabels,
-  ApexTitleSubtitle,
+  ApexGrid,
   ApexStroke,
-  ApexGrid
-} from "ng-apexcharts";
+  ApexTitleSubtitle,
+  ApexXAxis,
+  ChartComponent
+} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexAxisChartSeries;
@@ -31,10 +31,13 @@ export type ChartOptions = {
   animations: [fadeInAnimation]
 })
 export class DistributionComponent extends ChartsComponent {
-  @ViewChild("chart") chart: ChartComponent;
+
+  @ViewChild('chart') chart: ChartComponent;
+
   public chartOptionsMonth: Partial<ChartOptions>;
   public chartOptionsDay: Partial<ChartOptions>;
   public chartOptionsPeriod: Partial<ChartOptions>;
+
   distributionResponse: DistributionResponse;
 
   months: number[] = [];
@@ -57,45 +60,54 @@ export class DistributionComponent extends ChartsComponent {
         if (data !== null) {
           this.stopQueryData();
           this.distributionResponse = data;
-          this.preProcessCommits()
+          this.preProcessCommits();
           this.drawChart();
         }
       }
     );
   }
 
-  preProcessCommits(){
+  preProcessCommits() {
     this.distributionResponse.averageCommitsByMonth.forEach(element => {
       this.months.push(element.month);
       this.commitsPerMonth.push(element.commits);
-    })
+    });
 
     this.distributionResponse.averageCommitsByDay.forEach(element => {
       this.days.push(element.day);
       this.commitsPerDay.push(element.commits);
-    })
+    });
 
     this.distributionResponse.averageCommitsByDayPeriods.forEach(element => {
       this.periods.push(element.period);
       this.commitsPerPeriods.push(element.commits);
-    })
+    });
   }
 
   clearResult() {
     this.distributionResponse = new DistributionResponse();
+
+    this.months = [];
+    this.commitsPerMonth = [];
+
+    this.days = [];
+    this.commitsPerDay = [];
+
+    this.periods = [];
+    this.commitsPerPeriods = [];
   }
 
   drawChart() {
     this.chartOptionsMonth = {
       series: [
         {
-          name: "Average commits",
+          name: 'Average commits',
           data: this.commitsPerMonth
         }
       ],
       chart: {
         height: 350,
-        type: "line",
+        type: 'line',
         zoom: {
           enabled: false
         }
@@ -104,11 +116,11 @@ export class DistributionComponent extends ChartsComponent {
         enabled: false
       },
       stroke: {
-        curve: "straight"
+        curve: 'straight'
       },
       grid: {
         row: {
-          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
           opacity: 0.5
         }
       },
@@ -119,13 +131,13 @@ export class DistributionComponent extends ChartsComponent {
     this.chartOptionsDay = {
       series: [
         {
-          name: "Average commits",
+          name: 'Average commits',
           data: this.commitsPerDay
         }
       ],
       chart: {
         height: 350,
-        type: "line",
+        type: 'line',
         zoom: {
           enabled: false
         }
@@ -134,28 +146,28 @@ export class DistributionComponent extends ChartsComponent {
         enabled: false
       },
       stroke: {
-        curve: "straight"
+        curve: 'straight'
       },
       grid: {
         row: {
-          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
           opacity: 0.5
         }
       },
       xaxis: {
-        categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
       }
     };
     this.chartOptionsPeriod = {
       series: [
         {
-          name: "Average commits",
+          name: 'Average commits',
           data: this.commitsPerPeriods
         }
       ],
       chart: {
         height: 350,
-        type: "line",
+        type: 'line',
         zoom: {
           enabled: false
         }
@@ -164,11 +176,11 @@ export class DistributionComponent extends ChartsComponent {
         enabled: false
       },
       stroke: {
-        curve: "straight"
+        curve: 'straight'
       },
       grid: {
         row: {
-          colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
+          colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
           opacity: 0.5
         }
       },

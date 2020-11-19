@@ -9,14 +9,9 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
-
-  <!-- TODO: Draw contribution diagram here -->
-  <pre>
-    <apx-chart
-      [series]="chartOptions.series"
-      [chart]="chartOptions.chart"
-      [xaxis]="chartOptions.xaxis"
-    ></apx-chart>
-  </pre>
-
+  <apx-chart *ngIf="chartOptions"
+             [series]="chartOptions.series"
+             [chart]="chartOptions.chart"
+             [xaxis]="chartOptions.xaxis"
+  ></apx-chart>
 </mat-expansion-panel>

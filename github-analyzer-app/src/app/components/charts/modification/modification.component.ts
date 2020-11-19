@@ -1,15 +1,9 @@
-import { Component, ViewChild } from "@angular/core";
+import {Component, ViewChild} from '@angular/core';
 import {ChartsComponent} from '../charts.component';
 import {SingleRepositoryService} from '../../../service/single-repository.service';
 import {ModificationResponse} from '../../../model/modification-response.model';
 import {fadeInAnimation} from '../../../util/animations';
-import { ChartComponent } from "ng-apexcharts";
-
-import {
-  ApexNonAxisChartSeries,
-  ApexResponsive,
-  ApexChart
-} from "ng-apexcharts";
+import {ApexChart, ApexNonAxisChartSeries, ApexResponsive, ChartComponent} from 'ng-apexcharts';
 
 export type ChartOptions = {
   series: ApexNonAxisChartSeries;
@@ -25,8 +19,10 @@ export type ChartOptions = {
   animations: [fadeInAnimation]
 })
 export class ModificationComponent extends ChartsComponent {
-  @ViewChild("chart") chart: ChartComponent;
-  public chartOptions: Partial<ChartOptions>;
+  @ViewChild('chart') chart: ChartComponent;
+
+  chartOptions: Partial<ChartOptions>;
+
   modificationResponse: ModificationResponse;
 
   constructor(public singleRepositoryService: SingleRepositoryService) {
@@ -51,14 +47,13 @@ export class ModificationComponent extends ChartsComponent {
   }
 
   drawChart() {
-    // TODO: Draw modification diagram from <this.modificationResponse>
     this.chartOptions = {
       series: [7503, 2955],
       chart: {
         width: 380,
-        type: "pie"
+        type: 'pie'
       },
-      labels: ["Addition", "Remove"],
+      labels: ['Addition', 'Remove'],
       responsive: [
         {
           breakpoint: 480,
@@ -67,7 +62,7 @@ export class ModificationComponent extends ChartsComponent {
               width: 200
             },
             legend: {
-              position: "bottom"
+              position: 'bottom'
             }
           }
         }

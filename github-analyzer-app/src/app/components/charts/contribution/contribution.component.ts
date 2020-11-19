@@ -1,23 +1,9 @@
-import { Component, ViewChild } from "@angular/core";
+import {Component, ViewChild} from '@angular/core';
 import {SingleRepositoryService} from '../../../service/single-repository.service';
 import {ContributionResponse} from '../../../model/contribution-response.model';
 import {ChartsComponent} from '../charts.component';
 import {fadeInAnimation} from '../../../util/animations';
-import {
-  ChartComponent,
-  ApexAxisChartSeries,
-  ApexChart,
-  ApexXAxis,
-  ApexTitleSubtitle
-} from "ng-apexcharts";
-import {element} from "protractor";
-
-export type ChartOptions = {
-  series: ApexAxisChartSeries;
-  chart: ApexChart;
-  xaxis: ApexXAxis;
-  title: ApexTitleSubtitle;
-};
+import {ChartComponent} from 'ng-apexcharts';
 
 @Component({
   selector: 'app-contribution',
@@ -28,9 +14,12 @@ export type ChartOptions = {
 
 export class ContributionComponent extends ChartsComponent {
 
-  @ViewChild("chart") chart: ChartComponent;
+  @ViewChild('chart') chart: ChartComponent;
+
   contributionResponse: ContributionResponse;
-  public chartOptions: Partial<any>;
+
+  chartOptions: Partial<any>;
+
   totalCommits: number;
   developerNames: string[] = [];
   developerCommitNumbersPercent: number[] = [];
@@ -54,34 +43,36 @@ export class ContributionComponent extends ChartsComponent {
     );
   }
 
-  preProcessDevelopers(){
+  preProcessDevelopers() {
     this.contributionResponse.commitsByDevelopers.forEach(element => {
       this.developerNames.push(element.developerName);
-      var percent = (element.commits / this.totalCommits * 100).toFixed(2);
+      const percent = (element.commits / this.totalCommits * 100).toFixed(2);
       this.developerCommitNumbersPercent.push(Number(percent));
-    })
+    });
   }
 
   clearResult() {
     this.contributionResponse = new ContributionResponse();
+
+    this.developerNames = [];
+    this.developerCommitNumbersPercent = [];
   }
 
   drawChart() {
-    // TODO: Draw contribution diagram from <this.contributionResponse>
     this.chartOptions = {
       series: [
         {
-          name: "ContributionResponse",
+          name: 'ContributionResponse',
           data: this.developerCommitNumbersPercent
         }
       ],
       chart: {
         height: 350,
-        type: "bar"
+        type: 'bar'
       },
       xaxis: {
         categories: this.developerNames
       }
+    };
   }
-}
 }

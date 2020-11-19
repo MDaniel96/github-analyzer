@@ -9,26 +9,19 @@
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
-
-  <!-- TODO: Draw distribution diagram here -->
-  <pre>
-    <apx-chart
-      [series]="chartOptionsMonth.series"
-      [chart]="chartOptionsMonth.chart"
-      [xaxis]="chartOptionsMonth.xaxis"
-    ></apx-chart>
-
-    <apx-chart
-      [series]="chartOptionsDay.series"
-      [chart]="chartOptionsDay.chart"
-      [xaxis]="chartOptionsDay.xaxis"
-    ></apx-chart>
-
-    <apx-chart
-      [series]="chartOptionsPeriod.series"
-      [chart]="chartOptionsPeriod.chart"
-      [xaxis]="chartOptionsPeriod.xaxis"
-    ></apx-chart>
-  </pre>
-
+  <apx-chart *ngIf="chartOptionsMonth"
+             [series]="chartOptionsMonth.series"
+             [chart]="chartOptionsMonth.chart"
+             [xaxis]="chartOptionsMonth.xaxis"
+  ></apx-chart>
+  <apx-chart *ngIf="chartOptionsDay"
+             [series]="chartOptionsDay.series"
+             [chart]="chartOptionsDay.chart"
+             [xaxis]="chartOptionsDay.xaxis"
+  ></apx-chart>
+  <apx-chart *ngIf="chartOptionsPeriod"
+             [series]="chartOptionsPeriod.series"
+             [chart]="chartOptionsPeriod.chart"
+             [xaxis]="chartOptionsPeriod.xaxis"
+  ></apx-chart>
 </mat-expansion-panel>
