@@ -40,10 +40,10 @@ export class DistributionComponent extends ChartsComponent {
 
   distributionResponse: DistributionResponse;
 
-  months: number[] = [];
+  months: string[] = [];
   commitsPerMonth: number[] = [];
 
-  days: number[] = [];
+  days: string[] = [];
   commitsPerDay: number[] = [];
 
   periods: string[] = [];
@@ -68,19 +68,23 @@ export class DistributionComponent extends ChartsComponent {
   }
 
   preProcessCommits() {
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'];
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
     this.distributionResponse.averageCommitsByMonth.forEach(element => {
-      this.months.push(element.month);
+      this.months.push(months[element.month]);
       this.commitsPerMonth.push(element.commits);
     });
 
     this.distributionResponse.averageCommitsByDay.forEach(element => {
-      this.days.push(element.day);
+      this.days.push(days[element.day]);
       this.commitsPerDay.push(element.commits);
     });
 
     this.distributionResponse.averageCommitsByDayPeriods.forEach(element => {
       this.periods.push(element.period);
-      this.commitsPerPeriods.push(element.commits);
+      this.commitsPerPeriods.push(Math.round(element.commits * 100) / 100);
     });
   }
 
@@ -89,10 +93,8 @@ export class DistributionComponent extends ChartsComponent {
 
     this.months = [];
     this.commitsPerMonth = [];
-
     this.days = [];
     this.commitsPerDay = [];
-
     this.periods = [];
     this.commitsPerPeriods = [];
   }
@@ -155,7 +157,7 @@ export class DistributionComponent extends ChartsComponent {
         }
       },
       xaxis: {
-        categories: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        categories: this.days
       }
     };
     this.chartOptionsPeriod = {

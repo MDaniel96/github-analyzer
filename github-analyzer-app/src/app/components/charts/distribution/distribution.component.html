@@ -2,10 +2,10 @@
                      [expanded]="panelOpen" (toggle)="panelOpen = !panelOpen">
   <mat-expansion-panel-header>
     <mat-panel-title>
-      <h4>Distribution chart</h4>
+      <h4>Distribution charts</h4>
     </mat-panel-title>
     <mat-panel-description>
-      <h6>Time distribution of number of commits</h6>
+      <h6>Average number of commits per month, day and time period</h6>
     </mat-panel-description>
   </mat-expansion-panel-header>
   <mat-spinner *ngIf="intervalId !== null"></mat-spinner>
@@ -14,11 +14,15 @@
              [chart]="chartOptionsMonth.chart"
              [xaxis]="chartOptionsMonth.xaxis"
   ></apx-chart>
+  <br>
+  <br>
   <apx-chart *ngIf="chartOptionsDay"
              [series]="chartOptionsDay.series"
              [chart]="chartOptionsDay.chart"
              [xaxis]="chartOptionsDay.xaxis"
   ></apx-chart>
+  <br>
+  <br>
   <apx-chart *ngIf="chartOptionsPeriod"
              [series]="chartOptionsPeriod.series"
              [chart]="chartOptionsPeriod.chart"
