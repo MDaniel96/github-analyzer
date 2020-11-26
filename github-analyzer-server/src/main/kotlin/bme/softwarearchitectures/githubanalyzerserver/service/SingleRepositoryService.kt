@@ -1,9 +1,9 @@
 package bme.softwarearchitectures.githubanalyzerserver.service
 
-import bme.softwarearchitectures.githubanalyzerserver.model.ContributionResponse
-import bme.softwarearchitectures.githubanalyzerserver.model.DistributionResponse
-import bme.softwarearchitectures.githubanalyzerserver.model.ModificationResponse
-import bme.softwarearchitectures.githubanalyzerserver.model.SingleRepositoryRequest
+import bme.softwarearchitectures.githubanalyzerserver.dto.ContributionResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.DistributionResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.SingleRepositoryRequest
 
 interface SingleRepositoryService {
 

@@ -1,9 +1,9 @@
 package bme.softwarearchitectures.githubanalyzerserver.service
 
-import bme.softwarearchitectures.githubanalyzerserver.model.*
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.CommitsByMonth
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.DeveloperCompareResponse
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.DevelopmentCompareResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.*
+import bme.softwarearchitectures.githubanalyzerserver.dto.compare.CommitsByMonth
+import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DeveloperCompareResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DevelopmentCompareResponse
 import org.kohsuke.github.GHCommit
 import org.springframework.stereotype.Service
 

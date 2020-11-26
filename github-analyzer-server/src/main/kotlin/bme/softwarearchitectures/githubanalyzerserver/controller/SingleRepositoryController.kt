@@ -1,6 +1,6 @@
 package bme.softwarearchitectures.githubanalyzerserver.controller
 
-import bme.softwarearchitectures.githubanalyzerserver.model.SingleRepositoryRequest
+import bme.softwarearchitectures.githubanalyzerserver.dto.SingleRepositoryRequest
 import bme.softwarearchitectures.githubanalyzerserver.service.SingleRepositoryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

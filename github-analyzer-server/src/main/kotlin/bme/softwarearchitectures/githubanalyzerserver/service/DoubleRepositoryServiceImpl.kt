@@ -1,9 +1,9 @@
 package bme.softwarearchitectures.githubanalyzerserver.service
 
 import bme.softwarearchitectures.githubanalyzerserver.config.AppConfig
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.DeveloperCompareResponse
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.DevelopmentCompareResponse
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.DoubleRepositoryRequest
+import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DeveloperCompareResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DevelopmentCompareResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DoubleRepositoryRequest
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
 

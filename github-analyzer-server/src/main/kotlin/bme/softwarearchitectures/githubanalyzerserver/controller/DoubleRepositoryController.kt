@@ -1,6 +1,6 @@
 package bme.softwarearchitectures.githubanalyzerserver.controller
 
-import bme.softwarearchitectures.githubanalyzerserver.model.compare.DoubleRepositoryRequest
+import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DoubleRepositoryRequest
 import bme.softwarearchitectures.githubanalyzerserver.service.DoubleRepositoryService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

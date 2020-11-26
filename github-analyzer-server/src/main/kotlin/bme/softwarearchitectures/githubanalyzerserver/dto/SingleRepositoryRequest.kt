@@ -1,4 +1,4 @@
-package bme.softwarearchitectures.githubanalyzerserver.model
+package bme.softwarearchitectures.githubanalyzerserver.dto
 
 data class SingleRepositoryRequest(
         val repositoryUrl: String,

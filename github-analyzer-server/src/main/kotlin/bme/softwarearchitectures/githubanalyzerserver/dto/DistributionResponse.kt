@@ -1,4 +1,4 @@
-package bme.softwarearchitectures.githubanalyzerserver.model
+package bme.softwarearchitectures.githubanalyzerserver.dto
 
 class DistributionResponse(
         val averageCommitsByMonth: List<AverageCommitsByMonth>,

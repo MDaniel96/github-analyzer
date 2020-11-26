@@ -1,4 +1,4 @@
-package bme.softwarearchitectures.githubanalyzerserver.model.compare
+package bme.softwarearchitectures.githubanalyzerserver.dto.compare
 
 class CommitsByMonth(
         val year: Int,
