@@ -11,7 +11,7 @@ class Repository(
         @GeneratedValue(strategy = GenerationType.SEQUENCE)
         val id: Long = -1,
 
-        @Column(nullable = false)
+        @Column(unique = true, nullable = false)
         var url: String = "",
 
         @Column(nullable = false)

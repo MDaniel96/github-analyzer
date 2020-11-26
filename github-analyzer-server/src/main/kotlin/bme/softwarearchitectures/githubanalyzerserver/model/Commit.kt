@@ -17,6 +17,12 @@ class Commit(
         @Column(nullable = false)
         var created: LocalDateTime = LocalDateTime.now(),
 
+        @Column(nullable = false)
+        var linesAdded: Int = 0,
+
+        @Column(nullable = false)
+        var linesDeleted: Int = 0,
+
         @ManyToOne
         val repository: Repository
 )

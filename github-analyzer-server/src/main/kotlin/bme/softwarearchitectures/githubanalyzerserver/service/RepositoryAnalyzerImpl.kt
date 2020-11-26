@@ -4,24 +4,25 @@ import bme.softwarearchitectures.githubanalyzerserver.dto.*
 import bme.softwarearchitectures.githubanalyzerserver.dto.compare.CommitsByMonth
 import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DeveloperCompareResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DevelopmentCompareResponse
+import bme.softwarearchitectures.githubanalyzerserver.model.Commit
 import org.kohsuke.github.GHCommit
 import org.springframework.stereotype.Service
 
 @Service
 class RepositoryAnalyzerImpl : RepositoryAnalyzer {
 
-    override fun generateContributionResponse(commits: Array<GHCommit>): ContributionResponse {
+    override fun generateContributionResponse(commits: Collection<Commit>): ContributionResponse {
         val commitsByDevelopers = mutableListOf<CommitsByDeveloper>()
 
-        commits.groupBy { it.commitShortInfo.author.name }
+        commits.groupBy { it.author }
                 .forEach { (authorName, commits) -> commitsByDevelopers.add(CommitsByDeveloper(authorName, commits.size)) }
         return ContributionResponse(commits.size, commitsByDevelopers)
     }
 
-    override fun generateModificationResponse(commits: Array<GHCommit>): ModificationResponse {
+    override fun generateModificationResponse(commits: Collection<Commit>): ModificationResponse {
         val modificationsByDate = mutableListOf<ModificationsByDate>()
 
-        commits.groupBy { "${it.commitShortInfo.commitDate.year}|${it.commitShortInfo.commitDate.month}" }
+        commits.groupBy { "${it.created.year}|${it.created.month.value - 1}" }
                 .forEach { (date, commits) ->
                     var linesAdded = 0
                     var linesDeleted = 0
@@ -30,19 +31,19 @@ class RepositoryAnalyzerImpl : RepositoryAnalyzer {
                         linesDeleted += commit.linesDeleted
                     }
                     val splitDate = date.split("|")
-                    modificationsByDate.add(ModificationsByDate(1900 + splitDate[0].toInt(), splitDate[1].toInt(), linesAdded, linesDeleted))
+                    modificationsByDate.add(ModificationsByDate(splitDate[0].toInt(), splitDate[1].toInt(), linesAdded, linesDeleted))
                 }
         return ModificationResponse(modificationsByDate)
     }
 
-    override fun generateDistributionResponse(commits: Array<GHCommit>): DistributionResponse {
+    override fun generateDistributionResponse(commits: Collection<Commit>): DistributionResponse {
         val byMonth = mutableListOf<AverageCommitsByMonth>()
         val byDay = mutableListOf<AverageCommitsByDay>()
         val byPeriods = mutableListOf<AverageCommitsByDayPeriods>()
 
         val averageCommitsByMonth = mutableMapOf<Int, MutableList<Int>>()
         for (i in 0..11) averageCommitsByMonth[i] = mutableListOf()
-        commits.groupBy { "${it.commitShortInfo.commitDate.year}|${it.commitShortInfo.commitDate.month}" }
+        commits.groupBy { "${it.created.year}|${it.created.month.value - 1}" }
                 .forEach { (date, commits) ->
                     val splitDate = date.split("|")
                     val month = splitDate[1]
@@ -56,7 +57,7 @@ class RepositoryAnalyzerImpl : RepositoryAnalyzer {
 
         val averageCommitsByDay = mutableMapOf<Int, MutableList<Int>>()
         for (i in 0..6) averageCommitsByDay[i] = mutableListOf()
-        commits.groupBy { "${it.commitShortInfo.commitDate.year}|${it.commitShortInfo.commitDate.month}|${it.commitShortInfo.commitDate.day}" }
+        commits.groupBy { "${it.created.year}|${it.created.month.value - 1}|${it.created.dayOfWeek.value - 1}" }
                 .forEach { (date, commits) ->
                     val splitDate = date.split("|")
                     val day = splitDate[2]
@@ -74,8 +75,8 @@ class RepositoryAnalyzerImpl : RepositoryAnalyzer {
         averageCommitsByPeriods["13-18"] = mutableListOf()
         averageCommitsByPeriods["19-24"] = mutableListOf()
         commits.groupBy {
-            "${it.commitShortInfo.commitDate.year}|${it.commitShortInfo.commitDate.month}|${it.commitShortInfo.commitDate.day}" +
-                    "|${it.commitShortInfo.commitDate.hours}"
+            "${it.created.year}|${it.created.month.value - 1}|${it.created.dayOfWeek.value - 1}" +
+                    "|${it.created.hour}"
         }
                 .forEach { (date, commits) ->
                     val splitDate = date.split("|")
