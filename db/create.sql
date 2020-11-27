@@ -47,3 +47,14 @@ CREATE TABLE aftweb.analyzer_modification
 
     PRIMARY KEY (id)
 );
+
+CREATE TABLE aftweb.analyzer_distribution
+(
+    id             NUMBER,
+    type           VARCHAR2(10),
+    time           VARCHAR2(30),
+    commits        FLOAT,
+    repository_url VARCHAR2(300),
+
+    PRIMARY KEY (id)
+);

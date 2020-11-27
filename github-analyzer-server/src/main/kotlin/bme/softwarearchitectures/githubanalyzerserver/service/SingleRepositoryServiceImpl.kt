@@ -8,10 +8,7 @@ import bme.softwarearchitectures.githubanalyzerserver.dto.SingleRepositoryReques
 import bme.softwarearchitectures.githubanalyzerserver.dto.mappers.*
 import bme.softwarearchitectures.githubanalyzerserver.model.Commit
 import bme.softwarearchitectures.githubanalyzerserver.model.Repository
-import bme.softwarearchitectures.githubanalyzerserver.repository.CommitRepository
-import bme.softwarearchitectures.githubanalyzerserver.repository.ContributionRepository
-import bme.softwarearchitectures.githubanalyzerserver.repository.ModificationRepository
-import bme.softwarearchitectures.githubanalyzerserver.repository.RepositoryRepository
+import bme.softwarearchitectures.githubanalyzerserver.repository.*
 import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
@@ -24,7 +21,8 @@ class SingleRepositoryServiceImpl(
         val repositoryRepository: RepositoryRepository,
         val commitRepository: CommitRepository,
         val contributionRepository: ContributionRepository,
-        val modificationRepository: ModificationRepository
+        val modificationRepository: ModificationRepository,
+        val distributionRepository: DistributionRepository
 ) : SingleRepositoryService {
 
     val contributionResultMap = mutableMapOf<SingleRepositoryRequest, ContributionResponse>()
@@ -53,6 +51,9 @@ class SingleRepositoryServiceImpl(
 
                 val modifications = modificationRepository.findByRepositoryUrl(repositoryHistory.url)
                 modificationResultMap[request] = modifications.toModificationResponse()
+
+                val distributions = distributionRepository.findByRepositoryUrl(repositoryHistory.url)
+                distributionResultMap[request] = distributions.toDistributionResponse()
             }
         } else {
             val ghCommits = repository.listCommits().toArray()
@@ -64,7 +65,10 @@ class SingleRepositoryServiceImpl(
     private fun generateResponse(commits: Collection<Commit>, request: SingleRepositoryRequest) {
         contributionResultMap[request] = repositoryAnalyzer.generateContributionResponse(commits)
         saveContribution(contributionResultMap[request]!!, request.repositoryUrl)
+
         distributionResultMap[request] = repositoryAnalyzer.generateDistributionResponse(commits)
+        saveDistribution(distributionResultMap[request]!!, request.repositoryUrl)
+
         modificationResultMap[request] = repositoryAnalyzer.generateModificationResponse(commits)
         saveModification(modificationResultMap[request]!!, request.repositoryUrl)
     }
@@ -74,6 +78,13 @@ class SingleRepositoryServiceImpl(
         contributionRepository.deleteAll(contributionsToDelete)
         val contributions = contributionResponse.toContributionList(repositoryUrl)
         contributionRepository.saveAll(contributions)
+    }
+
+    private fun saveDistribution(distributionResponse: DistributionResponse, repositoryUrl: String) {
+        val distributionsToDelete = distributionRepository.findByRepositoryUrl(repositoryUrl)
+        distributionRepository.deleteAll(distributionsToDelete)
+        val distributions = distributionResponse.toDistributionList(repositoryUrl)
+        distributionRepository.saveAll(distributions)
     }
 
     private fun saveModification(modificationResponse: ModificationResponse, repositoryUrl: String) {

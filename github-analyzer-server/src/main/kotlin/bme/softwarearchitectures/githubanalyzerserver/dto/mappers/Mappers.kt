@@ -1,13 +1,7 @@
 package bme.softwarearchitectures.githubanalyzerserver.dto.mappers
 
-import bme.softwarearchitectures.githubanalyzerserver.dto.CommitsByDeveloper
-import bme.softwarearchitectures.githubanalyzerserver.dto.ContributionResponse
-import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationResponse
-import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationsByDate
-import bme.softwarearchitectures.githubanalyzerserver.model.Commit
-import bme.softwarearchitectures.githubanalyzerserver.model.Contribution
-import bme.softwarearchitectures.githubanalyzerserver.model.Modification
-import bme.softwarearchitectures.githubanalyzerserver.model.Repository
+import bme.softwarearchitectures.githubanalyzerserver.dto.*
+import bme.softwarearchitectures.githubanalyzerserver.model.*
 import org.kohsuke.github.GHCommit
 import java.time.Instant
 import java.time.LocalDateTime
@@ -59,4 +53,47 @@ fun ModificationResponse.toModificationList(repositoryUrl: String): List<Modific
 fun List<Modification>.toModificationResponse() =
         ModificationResponse(
                 modificationsByDate = this.map { ModificationsByDate(it.year, it.month, it.addedLines, it.removedLines) }.toList()
+        )
+
+fun DistributionResponse.toDistributionList(repositoryUrl: String): List<Distribution> {
+    val averageMonthList = this.averageCommitsByMonth.map {
+        Distribution(
+                type = Distribution.Type.MONTH,
+                time = it.month.toString(),
+                commits = it.commits,
+                repositoryUrl = repositoryUrl
+        )
+    }.toList()
+
+    val averageDayList = this.averageCommitsByDay.map {
+        Distribution(
+                type = Distribution.Type.DAY,
+                time = it.day.toString(),
+                commits = it.commits,
+                repositoryUrl = repositoryUrl
+        )
+    }.toList()
+
+    val averagePeriodList = this.averageCommitsByDayPeriods.map {
+        Distribution(
+                type = Distribution.Type.PERIOD,
+                time = it.period,
+                commits = it.commits,
+                repositoryUrl = repositoryUrl
+        )
+    }.toList()
+
+    return averageMonthList.union(averageDayList.union(averagePeriodList)).toList()
+}
+
+fun List<Distribution>.toDistributionResponse() =
+        DistributionResponse(
+                averageCommitsByMonth = this.filter { it.type == Distribution.Type.MONTH }
+                        .map { AverageCommitsByMonth(it.time.toInt(), it.commits) }.toList(),
+
+                averageCommitsByDay = this.filter { it.type == Distribution.Type.DAY }
+                        .map { AverageCommitsByDay(it.time.toInt(), it.commits) }.toList(),
+
+                averageCommitsByDayPeriods = this.filter { it.type == Distribution.Type.PERIOD }
+                        .map { AverageCommitsByDayPeriods(it.time, it.commits) }.toList()
         )
