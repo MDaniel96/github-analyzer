@@ -30,7 +30,7 @@ class SingleRepositoryServiceImpl(
     val distributionResultMap = mutableMapOf<SingleRepositoryRequest, DistributionResponse>()
 
     override fun analyze(request: SingleRepositoryRequest) {
-        val gitHubAPI = connectGithub(request)
+        val gitHubAPI = connectGithub(request?.accessToken)
         val repository = gitHubAPI.getRepository(request.repositoryId)
         val repositoryHistory = repositoryRepository.findByUrl(request.repositoryUrl)
 
@@ -100,16 +100,16 @@ class SingleRepositoryServiceImpl(
 
     override fun getDistributionResultMap(request: SingleRepositoryRequest) = distributionResultMap.remove(request)
 
-    private fun connectGithub(request: SingleRepositoryRequest): GitHub {
+    override fun connectGithub(accessToken: String?): GitHub {
         return GitHub.connectUsingOAuth(
-                if (request.accessToken != "")
-                    request.accessToken
+                if (accessToken != null && accessToken != "")
+                    accessToken
                 else
                     appConfig.accessToken
         )
     }
 
-    private fun saveRepositoryWithCommits(repositoryUrl: String, repositoryName: String, commits: Array<GHCommit>): Collection<Commit> {
+    override fun saveRepositoryWithCommits(repositoryUrl: String, repositoryName: String, commits: Array<GHCommit>): Collection<Commit> {
         val repositoryToSave = repositoryRepository.save(
                 Repository(
                         url = repositoryUrl,
@@ -123,7 +123,7 @@ class SingleRepositoryServiceImpl(
         return commitsToSave
     }
 
-    private fun saveCommits(newCommits: Array<GHCommit>, repository: Repository) {
+    override fun saveCommits(newCommits: Array<GHCommit>, repository: Repository) {
         val commitsToSave = newCommits.toCommitList(repository)
         repository.commits.addAll(commitsToSave)
         commitRepository.saveAll(commitsToSave)

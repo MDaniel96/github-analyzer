@@ -6,7 +6,6 @@ import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DeveloperCompareResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.compare.DevelopmentCompareResponse
 import bme.softwarearchitectures.githubanalyzerserver.model.Commit
-import org.kohsuke.github.GHCommit
 
 interface RepositoryAnalyzer {
 
@@ -16,7 +15,7 @@ interface RepositoryAnalyzer {
 
     fun generateDistributionResponse(commits: Collection<Commit>): DistributionResponse
 
-    fun generateDevelopmentCompareResponse(commits1: Array<GHCommit>, commits2: Array<GHCommit>): DevelopmentCompareResponse
+    fun generateDevelopmentCompareResponse(commits1: Collection<Commit>, commits2: Collection<Commit>): DevelopmentCompareResponse
 
-    fun generateDeveloperCompareResponse(commits1: Array<GHCommit>, commits2: Array<GHCommit>): DeveloperCompareResponse
+    fun generateDeveloperCompareResponse(commits1: Collection<Commit>, commits2: Collection<Commit>): DeveloperCompareResponse
 }
