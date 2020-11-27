@@ -4,9 +4,6 @@ import bme.softwarearchitectures.githubanalyzerserver.dto.ContributionResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.DistributionResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.SingleRepositoryRequest
-import bme.softwarearchitectures.githubanalyzerserver.model.Commit
-import bme.softwarearchitectures.githubanalyzerserver.model.Repository
-import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GitHub
 
 interface SingleRepositoryService {
@@ -20,8 +17,4 @@ interface SingleRepositoryService {
     fun getDistributionResultMap(request: SingleRepositoryRequest): DistributionResponse?
 
     fun connectGithub(accessToken: String?): GitHub
-
-    fun saveCommits(newCommits: Array<GHCommit>, repository: Repository)
-
-    fun saveRepositoryWithCommits(repositoryUrl: String, repositoryName: String, commits: Array<GHCommit>): Collection<Commit>
 }

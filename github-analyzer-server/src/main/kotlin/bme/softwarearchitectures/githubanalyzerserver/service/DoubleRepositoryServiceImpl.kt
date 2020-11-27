@@ -18,7 +18,8 @@ class DoubleRepositoryServiceImpl(
         val repositoryAnalyzer: RepositoryAnalyzer,
         val repositoryRepository: RepositoryRepository,
         val commitRepository: CommitRepository,
-        val singleRepositoryService: SingleRepositoryService
+        val singleRepositoryService: SingleRepositoryService,
+        val commitService: CommitService
 ) : DoubleRepositoryService {
 
     val developmentCompareResultMap = mutableMapOf<DoubleRepositoryRequest, DevelopmentCompareResponse>()
@@ -50,12 +51,12 @@ class DoubleRepositoryServiceImpl(
             if (newCommits.isNotEmpty()) {
                 repositoryHistory.commits.addAll(newCommits.toCommitList(repositoryHistory))
                 repositoryHistory.commits.sortedBy { it.created.month.value }
-                singleRepositoryService.saveCommits(newCommits, repositoryHistory)
+                commitService.saveCommits(newCommits, repositoryHistory)
             }
             return repositoryHistory.commits
         } else {
             val ghCommits = repository.listCommits().toArray()
-            return singleRepositoryService.saveRepositoryWithCommits(repositoryUrl, repository.name, ghCommits)
+            return commitService.saveRepositoryWithCommits(repositoryUrl, repository.name, ghCommits)
         }
     }
 }

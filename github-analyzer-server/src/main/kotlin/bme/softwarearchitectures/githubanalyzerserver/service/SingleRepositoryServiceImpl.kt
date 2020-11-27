@@ -7,9 +7,7 @@ import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.SingleRepositoryRequest
 import bme.softwarearchitectures.githubanalyzerserver.dto.mappers.*
 import bme.softwarearchitectures.githubanalyzerserver.model.Commit
-import bme.softwarearchitectures.githubanalyzerserver.model.Repository
 import bme.softwarearchitectures.githubanalyzerserver.repository.*
-import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GitHub
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -22,7 +20,8 @@ class SingleRepositoryServiceImpl(
         val commitRepository: CommitRepository,
         val contributionRepository: ContributionRepository,
         val modificationRepository: ModificationRepository,
-        val distributionRepository: DistributionRepository
+        val distributionRepository: DistributionRepository,
+        val commitService: CommitService
 ) : SingleRepositoryService {
 
     val contributionResultMap = mutableMapOf<SingleRepositoryRequest, ContributionResponse>()
@@ -44,7 +43,7 @@ class SingleRepositoryServiceImpl(
                 repositoryHistory.commits.addAll(newCommits.toCommitList(repositoryHistory))
                 repositoryHistory.commits.sortedBy { it.created.month.value }
                 generateResponse(repositoryHistory.commits, request)
-                saveCommits(newCommits, repositoryHistory)
+                commitService.saveCommits(newCommits, repositoryHistory)
             } else {
                 val contributions = contributionRepository.findByRepositoryUrl(repositoryHistory.url)
                 contributionResultMap[request] = contributions.toContributionResponse()
@@ -57,7 +56,7 @@ class SingleRepositoryServiceImpl(
             }
         } else {
             val ghCommits = repository.listCommits().toArray()
-            val commits = saveRepositoryWithCommits(request.repositoryUrl, repository.name, ghCommits)
+            val commits = commitService.saveRepositoryWithCommits(request.repositoryUrl, repository.name, ghCommits)
             generateResponse(commits, request)
         }
     }
@@ -107,25 +106,5 @@ class SingleRepositoryServiceImpl(
                 else
                     appConfig.accessToken
         )
-    }
-
-    override fun saveRepositoryWithCommits(repositoryUrl: String, repositoryName: String, commits: Array<GHCommit>): Collection<Commit> {
-        val repositoryToSave = repositoryRepository.save(
-                Repository(
-                        url = repositoryUrl,
-                        name = repositoryName,
-                        lastQueried = LocalDateTime.now()
-                )
-        )
-        val commitsToSave = commits.toCommitList(repositoryToSave)
-        commitRepository.saveAll(commitsToSave)
-        repositoryToSave.commits = commitsToSave
-        return commitsToSave
-    }
-
-    override fun saveCommits(newCommits: Array<GHCommit>, repository: Repository) {
-        val commitsToSave = newCommits.toCommitList(repository)
-        repository.commits.addAll(commitsToSave)
-        commitRepository.saveAll(commitsToSave)
     }
 }
