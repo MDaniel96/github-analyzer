@@ -2,8 +2,11 @@ package bme.softwarearchitectures.githubanalyzerserver.dto.mappers
 
 import bme.softwarearchitectures.githubanalyzerserver.dto.CommitsByDeveloper
 import bme.softwarearchitectures.githubanalyzerserver.dto.ContributionResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationResponse
+import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationsByDate
 import bme.softwarearchitectures.githubanalyzerserver.model.Commit
 import bme.softwarearchitectures.githubanalyzerserver.model.Contribution
+import bme.softwarearchitectures.githubanalyzerserver.model.Modification
 import bme.softwarearchitectures.githubanalyzerserver.model.Repository
 import org.kohsuke.github.GHCommit
 import java.time.Instant
@@ -40,4 +43,20 @@ fun List<Contribution>.toContributionResponse() =
         ContributionResponse(
                 totalCommits = this[0].totalCommits,
                 commitsByDevelopers = this.map { CommitsByDeveloper(it.developerName, it.commits) }.toList()
+        )
+
+fun ModificationResponse.toModificationList(repositoryUrl: String): List<Modification> =
+        this.modificationsByDate.map {
+            Modification(
+                    year = it.year,
+                    month = it.month,
+                    addedLines = it.addedLines,
+                    removedLines = it.removedLines,
+                    repositoryUrl = repositoryUrl
+            )
+        }.toList()
+
+fun List<Modification>.toModificationResponse() =
+        ModificationResponse(
+                modificationsByDate = this.map { ModificationsByDate(it.year, it.month, it.addedLines, it.removedLines) }.toList()
         )

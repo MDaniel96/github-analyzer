@@ -5,14 +5,12 @@ import bme.softwarearchitectures.githubanalyzerserver.dto.ContributionResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.DistributionResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.ModificationResponse
 import bme.softwarearchitectures.githubanalyzerserver.dto.SingleRepositoryRequest
-import bme.softwarearchitectures.githubanalyzerserver.dto.mappers.toCommitList
-import bme.softwarearchitectures.githubanalyzerserver.dto.mappers.toContributionList
-import bme.softwarearchitectures.githubanalyzerserver.dto.mappers.toContributionResponse
-import bme.softwarearchitectures.githubanalyzerserver.dto.mappers.toDate
+import bme.softwarearchitectures.githubanalyzerserver.dto.mappers.*
 import bme.softwarearchitectures.githubanalyzerserver.model.Commit
 import bme.softwarearchitectures.githubanalyzerserver.model.Repository
 import bme.softwarearchitectures.githubanalyzerserver.repository.CommitRepository
 import bme.softwarearchitectures.githubanalyzerserver.repository.ContributionRepository
+import bme.softwarearchitectures.githubanalyzerserver.repository.ModificationRepository
 import bme.softwarearchitectures.githubanalyzerserver.repository.RepositoryRepository
 import org.kohsuke.github.GHCommit
 import org.kohsuke.github.GitHub
@@ -25,7 +23,8 @@ class SingleRepositoryServiceImpl(
         val repositoryAnalyzer: RepositoryAnalyzer,
         val repositoryRepository: RepositoryRepository,
         val commitRepository: CommitRepository,
-        val contributionRepository: ContributionRepository
+        val contributionRepository: ContributionRepository,
+        val modificationRepository: ModificationRepository
 ) : SingleRepositoryService {
 
     val contributionResultMap = mutableMapOf<SingleRepositoryRequest, ContributionResponse>()
@@ -51,6 +50,9 @@ class SingleRepositoryServiceImpl(
             } else {
                 val contributions = contributionRepository.findByRepositoryUrl(repositoryHistory.url)
                 contributionResultMap[request] = contributions.toContributionResponse()
+
+                val modifications = modificationRepository.findByRepositoryUrl(repositoryHistory.url)
+                modificationResultMap[request] = modifications.toModificationResponse()
             }
         } else {
             val ghCommits = repository.listCommits().toArray()
@@ -64,6 +66,7 @@ class SingleRepositoryServiceImpl(
         saveContribution(contributionResultMap[request]!!, request.repositoryUrl)
         distributionResultMap[request] = repositoryAnalyzer.generateDistributionResponse(commits)
         modificationResultMap[request] = repositoryAnalyzer.generateModificationResponse(commits)
+        saveModification(modificationResultMap[request]!!, request.repositoryUrl)
     }
 
     private fun saveContribution(contributionResponse: ContributionResponse, repositoryUrl: String) {
@@ -71,6 +74,13 @@ class SingleRepositoryServiceImpl(
         contributionRepository.deleteAll(contributionsToDelete)
         val contributions = contributionResponse.toContributionList(repositoryUrl)
         contributionRepository.saveAll(contributions)
+    }
+
+    private fun saveModification(modificationResponse: ModificationResponse, repositoryUrl: String) {
+        val modificationsToDelete = modificationRepository.findByRepositoryUrl(repositoryUrl)
+        modificationRepository.deleteAll(modificationsToDelete)
+        val modifications = modificationResponse.toModificationList(repositoryUrl)
+        modificationRepository.saveAll(modifications)
     }
 
     override fun getContributionResultMap(request: SingleRepositoryRequest) = contributionResultMap.remove(request)

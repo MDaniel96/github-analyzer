@@ -35,3 +35,15 @@ CREATE TABLE aftweb.analyzer_contribution
 
     PRIMARY KEY (id)
 );
+
+CREATE TABLE aftweb.analyzer_modification
+(
+    id             NUMBER,
+    year           NUMBER,
+    month          NUMBER,
+    added_lines    NUMBER,
+    removed_lines  NUMBER,
+    repository_url VARCHAR2(300),
+
+    PRIMARY KEY (id)
+);
